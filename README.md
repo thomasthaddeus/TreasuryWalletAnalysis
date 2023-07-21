@@ -1,20 +1,22 @@
 ## Getting Started
 Create a python3.11 virtual environment
 ```console
-user@machine:~$ python3.11 -m venv env
+python3.11 -m venv env
 ```
 
 Enter into the virtual environment
 ```console
-user@machine:~$ source env/bin/activate
+source env/bin/activate
 ```
 
 Install necissary packages using pip
 ```console
-user@machine:~$ pip3 install -r requirements.txt 
+pip3 install -r requirements.txt 
 ```
 Files should be run in this order:
 dune_API_pull.py &rarr; historical_prices_coingecko.py &rarr; decimals_token_coingecko.py &rarr; scrape_Web3.py &rarr; calculations.py
+
+You will need to add your Dune API key and Infura API key to the .env file
 
 Data files will be stored in the data directory
 
