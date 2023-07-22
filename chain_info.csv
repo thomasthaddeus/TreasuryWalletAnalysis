@@ -1,0 +1,8 @@
+blockchain,queryID, queryCSV,blockExplorerURL
+arbitrum-one,2664815,2664815.csv, https://arbiscan.io/token/
+avalanche,2670811,2670811.csv, https://snowtrace.io/token/
+binance-smart-chain,2670814,2670814.csv, https://bscscan.com/token/
+fantom,2670822,2670822.csv, https://ftmscan.com/token/
+ethereum,2670826,2670826.csv, https://etherscan.io/token/
+optimistic-ethereum,2670831,2670831.csv, https://optimistic.etherscan.io/token/
+polygon-pos,2670824,2670824.csv, https://polygonscan.com/token/

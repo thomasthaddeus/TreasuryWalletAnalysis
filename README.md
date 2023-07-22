@@ -1,5 +1,5 @@
 ## Getting Started
-Create a python3.11 virtual environment
+Create a python 3.11 virtual environment
 ```console
 python3.11 -m venv env
 ```
@@ -9,7 +9,7 @@ Enter into the virtual environment
 source env/bin/activate
 ```
 
-Install necissary packages using pip
+Install necessary packages using pip
 ```console
 pip3 install -r requirements.txt 
 ```
@@ -22,7 +22,7 @@ Data files will be stored in the data directory
 
 ---
 ## Using the Dune API to download the results from the Dune queries 
-Below is the list of Dune quieres. Each query tracks the inflow and outflow of ERC-20 tokens from the Synapse treasury wallet for each chain.
+Below is the list of Dune queries. Each query tracks the inflow and outflow of ERC-20 tokens from the Synapse treasury wallet for each chain.
 * [Arbitrum](https://dune.com/queries/2664815) 2664815
 * [Avalanche](https://dune.com/queries/2670811) 2670811
 * [Binance Smart Chain](https://dune.com/queries/2670814) 2670814
@@ -35,7 +35,7 @@ Below is the list of Dune quieres. Each query tracks the inflow and outflow of E
 Historical price data, token names, tickers, and decimal values are gathered from Coingecko using the CoinGecko API
 
 ## Handling missing historical price data for nETH, nUSD, and liquidity pool tokens
-In most cases, there is no historical price data for nETH, nUSD, or any token from a liquidy pool. In the case of nETH and nUSD, the historical and current prices are taken from similar tokens. nETH is given the same prices as WETH, and nUSD is given the same price as another stablecoin. The same is done for tokens from liquidity pools. These tokens are priced with the largest stablecoin on that chain.
+In most cases, there is no historical price data for nETH, nUSD, or any token from a liquidity pool. In the case of nETH and nUSD, the historical and current prices are taken from similar tokens. nETH is given the same prices as WETH, and nUSD is given the same price as another stablecoin. The same is done for tokens from liquidity pools. These tokens are priced with the largest stablecoin on that chain.
 
 ## Web scraping and Web3.py
 Some tokens do not have decimal or token name information on CoinGecko or Dune. To rectify this problem, web scraping of each chains block explorer is used to get that data. In the event of chains where Infura has nodes, a direct call to the contract address is used to get information.
