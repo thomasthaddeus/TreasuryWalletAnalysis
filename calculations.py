@@ -94,8 +94,6 @@ for index, row in data.iterrows():
     # Concatenate the new DataFrame with the original DataFrame
     df_with_headers = pd.concat([new_df, df_pivot])
 
-    # Reset the index
-
     def promote_rows_as_headers(df):
         new_header = df.iloc[0:2]  # Get the first two rows as the new headers
         df = df[2:]  # Remove the first two rows from the DataFrame
