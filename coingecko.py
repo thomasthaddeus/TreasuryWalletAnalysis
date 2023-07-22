@@ -103,9 +103,9 @@ for index, row in data.iterrows():
     addresses_df = pd.read_csv(f'data/{addresses_file}')
     contract_addresses = addresses_df['contract_address'].unique()
     if blockchain == 'optimistic-ethereum':
-        contract_addresses = np.append(contract_addresses, '0x4200000000000000000000000000000000000006') # Appending the contract address for XXXX
+        contract_addresses = np.append(contract_addresses, '0x4200000000000000000000000000000000000006') # Appending the contract address for WETH
     if blockchain == 'fantom':
-        contract_addresses = np.append(contract_addresses, '0x9879abdea01a879644185341f7af7d8343556b7a') # Appending the contract address for XXXX
+        contract_addresses = np.append(contract_addresses, '0x9879abdea01a879644185341f7af7d8343556b7a') # Appending the contract address for TrueUSD
     # Create an empty DataFrame to store monthly prices for the current blockchain
     blockchain_prices = pd.DataFrame()
 
