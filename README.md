@@ -14,11 +14,15 @@ Install necessary packages using pip
 pip3 install -r requirements.txt 
 ```
 Files should be run in this order:
-dune_API_pull.py &rarr; historical_prices_coingecko.py &rarr; decimals_token_coingecko.py &rarr; scrape_Web3.py &rarr; calculations.py
+dune.py &rarr; coingecko.py &rarr; scrape.py &rarr; calculations.py
 
 You will need to add your Dune API key and Infura API key to the .env file
 
 Data files will be stored in the data directory
+
+Information regarding each chain is held in the chain_info.csv file
+
+Results from running these scripts will be placed in the summed.csv file.
 
 ---
 ## Using the Dune API to download the results from the Dune queries 
