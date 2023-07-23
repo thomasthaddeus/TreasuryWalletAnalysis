@@ -1,17 +1,17 @@
 # Importing important packages
+import time
 import pandas as pd
+import numpy as np
+pd.set_option('display.float_format', lambda x: f'{x:.3f}')
+
 import requests
 from requests import get, post
-import numpy as np
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import pandas as pd
-pd.set_option('display.float_format', lambda x: f'{x:.3f}')
-import time
-import matplotlib.pyplot as plt
 from dotenv import load_dotenv
-import os
 from web3 import Web3
+
+import matplotlib.pyplot as plt
 
 
 def get_monthly_prices(contract_address, blockchain):
@@ -143,14 +143,35 @@ for index, row in data.iterrows():
             contract_info.append({'blockchain': blockchain, 'contract_address': address, 'ticker': ticker, 'decimal': precision})
         time.sleep(7)
 
-# Save the contract information to a CSV file
-contract_info_df = pd.DataFrame(contract_info)
-contract_info_df.to_csv('data/contract_info.csv', index=False)
+
+def save_info():
+    """
+    save_info _summary_
+
+    _extended_summary_
+    """
+    # Save the contract information to a CSV file
+    contract_info_df = pd.DataFrame(contract_info)
+    contract_info_df.to_csv("blockstring", end='.csv', index=False)
+    print()
 
 
 
 #For tokens such as nETH and nUSD, columns from similar tokens are copied and the header is changed to match the contract address of the original token
 def copy_column_with_new_header(df, column_name, new_header):
+    """
+    copy_column_with_new_header _summary_
+
+    _extended_summary_
+
+    Args:
+        df (_type_): _description_
+        column_name (_type_): _description_
+        new_header (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     new_df = df.copy()
     new_df[new_header] = df[column_name]
     return new_df
@@ -166,7 +187,7 @@ for sheet_name in sheet_names:
     cols = list(monthly.columns) # Creating a list with the headers
     for col in cols:
         if sheet_name == "arbitrum-one":
-            monthly = copy_column_with_new_header(monthly, "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9", "0x2913e812cf0dcca30fb28e6cac3d2dcff4497688") 
+            monthly = copy_column_with_new_header(monthly, "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9", "0x2913e812cf0dcca30fb28e6cac3d2dcff4497688")
             monthly = copy_column_with_new_header(monthly, "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9", "0xe264cb5a941f98a391b9d5244378edf79bf5c19e")
             monthly = copy_column_with_new_header(monthly, "0x82af49447d8a07e3bd95bd0d56f35241523fbab1", "0x3ea9b0ab55f34fb188824ee288ceaefc63cf908e")
         if sheet_name == "avalanche":
@@ -209,7 +230,7 @@ data = pd.read_csv('chain_info.csv')
 for index, row in data.iterrows():
     blockchain = row['blockchain']
     file_name = row['queryCSV']
-    
+
     # Read the transactions CSV file
     transactions_df = pd.read_csv(f'data/{file_name}')
 

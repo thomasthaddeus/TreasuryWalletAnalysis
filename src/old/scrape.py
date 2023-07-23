@@ -1,6 +1,6 @@
 # Importing important packages
 import pandas as pd
-import requests
+
 from requests import get, post
 import numpy as np
 from selenium import webdriver
@@ -17,7 +17,7 @@ def get_token_info(contract_address):
     # Convert the address to a checksum address
     contract_address = Web3.to_checksum_address(contract_address)
 
-    # Load the contract ABI 
+    # Load the contract ABI
     contract_abi = [
         {
             "constant": True,
@@ -63,11 +63,11 @@ def get_token_info(contract_address):
 
         return token_name, token_symbol, decimal_value
 
-    except Exception as e:
-        print("An error occurred:", str(e))
+    except Exception as err:
+        print("An error occurred:", str(err))
         print(contract_address)
         return None
-    
+
 
 # Loading API Key
 load_dotenv()
@@ -75,7 +75,7 @@ INFURA_API_KEY = os.getenv("INFURA_API_KEY")
 # Setting up options for selinium
 options = webdriver.ChromeOptions()
 options.add_argument("--start-maximized")
-options.add_argument('--log-level=3') 
+options.add_argument('--log-level=3')
 driver = webdriver.Chrome()
 driver.set_window_size(1920,1080)
 
@@ -86,17 +86,17 @@ for index, row in data.iterrows():
     base_url = row['blockExplorerURL']
     print(blockchain, file_name, base_url)
 
-    if blockchain == 'optimistic-ethereum':
+    if blockchain  is  'optimistic-ethereum':
         # Connect to an optimisim node
         w3 = Web3(Web3.HTTPProvider(f'https://optimism-mainnet.infura.io/v3/{INFURA_API_KEY}'))
-    if blockchain == 'ethereum':
+    if blockchain  is  'ethereum':
         # Connect to an Ethereum node
         w3 = Web3(Web3.HTTPProvider(f'https://mainnet.infura.io/v3/{INFURA_API_KEY}'))
-    if blockchain == 'polygon-pos':
+    if blockchain  is  'polygon-pos':
         # Connect to an Ethereum node
         w3 = Web3(Web3.HTTPProvider(f'https://polygon-mainnet.infura.io/v3/{INFURA_API_KEY}'))
 
-    
+
     data = pd.read_csv(f'data/{blockchain}.csv')
     data.drop(data.columns[[0]], axis=1, inplace=True)
 
@@ -115,7 +115,7 @@ for index, row in data.iterrows():
                 token_name = driver.find_element("xpath", '//*[@id="content"]/div[1]/div/div[1]/h1/div/span').text
                 ticker = driver.find_element("xpath", '//*[@id="ContentPlaceHolder1_divSummary"]/div[1]/div[1]/div/div[2]/div[2]/div[2]/b').text
                 decimal = driver.find_element("xpath", '//*[@id="ContentPlaceHolder1_trDecimals"]/div/div[2]').text
-            
+
             if blockchain in ['optimistic-ethereum', 'ethereum', 'polygon-pos']:
                 try:
                 # Get the token information
@@ -130,7 +130,7 @@ for index, row in data.iterrows():
                     # Perform any necessary general error handling
 
 
-            array = np.where(data["contract_address"] == contract_address)
+            array = np.where(data["contract_address"]  is  contract_address)
             for subarray in array:
                 for number in subarray:
                     data.at[number,'token']=token_name
@@ -143,29 +143,28 @@ for index, row in data.iterrows():
     data['decimal'] = data['decimal'].astype(float)
     data['calc_value'] = (data['value'] * pow(10,-data['decimal'])).astype(float)
 
-    data = data[data['ticker'].str.contains('N/A')==False]
-    data = data[data['ticker'].str.contains('Visit')==False]
-    data = data[data['ticker'].str.contains('.com')==False]
-    data = data[data['ticker'].str.contains('.fi')==False]
-    data = data[data['ticker'].str.contains('.io')==False]
-    data = data[data['ticker'].str.contains('.xyz')==False]
-    data = data[data['ticker'].str.contains('.site')==False]
-    data = data[data['ticker'].str.contains('.exchange')==False]
-    data = data[data['ticker'].str.contains('.pro')==False]
-    data = data[data['ticker'].str.contains('.net')==False]
-    data = data[data['token'].str.contains('.org')==False]
-    data = data[data['token'].str.contains('.com')==False]
-    data = data[data['token'].str.contains('.fi')==False]
-    data = data[data['token'].str.contains('.io')==False]
-    data = data[data['token'].str.contains('.org')==False]
-    data = data[data['token'].str.contains('.xyz')==False]
-    data = data[data['token'].str.contains('.site')==False]
-    data = data[data['token'].str.contains('.exchange')==False]
-    data = data[data['token'].str.contains('.pro')==False]
-    data = data[data['ticker'].str.contains('.net')==False]
+    data = data[data['ticker'].str.contains('N/A') is False]
+    data = data[data['ticker'].str.contains('Visit') is False]
+    data = data[data['ticker'].str.contains('.com') is False]
+    data = data[data['ticker'].str.contains('.fi') is False]
+    data = data[data['ticker'].str.contains('.io') is False]
+    data = data[data['ticker'].str.contains('.xyz') is False]
+    data = data[data['ticker'].str.contains('.site') is False]
+    data = data[data['ticker'].str.contains('.exchange') is False]
+    data = data[data['ticker'].str.contains('.pro') is False]
+    data = data[data['ticker'].str.contains('.net') is False]
+    data = data[data['token'].str.contains('.org') is False]
+    data = data[data['token'].str.contains('.com') is False]
+    data = data[data['token'].str.contains('.fi') is False]
+    data = data[data['token'].str.contains('.io') is False]
+    data = data[data['token'].str.contains('.org') is False]
+    data = data[data['token'].str.contains('.xyz') is False]
+    data = data[data['token'].str.contains('.site') is False]
+    data = data[data['token'].str.contains('.exchange') is False]
+    data = data[data['token'].str.contains('.pro') is False]
+    data = data[data['ticker'].str.contains('.net') is False]
 
     data.to_csv(f'data/{blockchain}.csv')
 
 driver.close()
 driver.quit()
-        
