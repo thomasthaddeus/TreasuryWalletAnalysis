@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """get_gecko.py
 
 This script contains the GetGecko class, which gathers and processes price
@@ -268,6 +270,19 @@ class GetGecko:
 
 
     def copy_column_with_new_header(self, df, orig_header, new_header):
+        """
+        copy_column_with_new_header _summary_
+
+        _extended_summary_
+
+        Args:
+            df (_type_): _description_
+            orig_header (_type_): _description_
+            new_header (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         if orig_header in df.columns:
             df[new_header] = df[orig_header]
         return df
@@ -298,7 +313,7 @@ class GetGecko:
             None
         """
         excel_file, sheet_names = self.get_excel_sheets()
-        writer = pd.ExcelWriter('data/monthly_prices_full.xlsx')
+        writer = pd.ExcelWriter('../../../data/monthly_prices_full.xlsx')
         for sheet in sheet_names:
             self.write_sheet_to_excel(excel_file, sheet, writer)
         writer.close()

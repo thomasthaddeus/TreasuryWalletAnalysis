@@ -1,6 +1,7 @@
 {
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
+    "python.envFile": ".env",
     "python.analysis.extraPaths": [
         "./src/refactored/functions"
     ]

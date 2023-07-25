@@ -63,7 +63,7 @@ class Dune:
         Returns the execution ID of the instance which is executing the query.
         """
 
-        url = make_api_url("query", "execute", query_id)
+        url = self.make_api_url("query", "execute", query_id)
         response = post(url, headers=HEADER, timeout=300)
         execution_id = response.json()['execution_id']
 
@@ -77,7 +77,7 @@ class Dune:
         Returns the status response object
         """
 
-        url = make_api_url("execution", "status", execution_id)
+        url = self.make_api_url("execution", "status", execution_id)
         response = get(url, headers=HEADER, timeout=300)
 
         return response
@@ -90,7 +90,7 @@ class Dune:
         Returns the results response object
         """
 
-        url = make_api_url("execution", "results", execution_id)
+        url = self.make_api_url("execution", "results", execution_id)
         response = get(url, headers=HEADER, timeout=300)
 
         return response
@@ -103,7 +103,7 @@ class Dune:
         Returns the response object.
         """
 
-        url = make_api_url("execution", "cancel", execution_id)
+        url = self.make_api_url("execution", "cancel", execution_id)
         response = get(url, headers=HEADER, timeout=300)
 
         return response
@@ -121,7 +121,7 @@ class Dune:
         Returns:
             _type_: _description_
         """
-        response = get_query_status(execution_id)
+        response = self.get_query_status(execution_id)
         response = response.json()
         if response['state'] == 'QUERY_STATE_COMPLETED':
             return True

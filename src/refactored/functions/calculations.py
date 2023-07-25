@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """calculations.py
 
 This script contains a class DataAnalysis that provides methods for loading,
@@ -208,7 +210,7 @@ class DataAnalysis:
         df.columns = new_columns
         return df
 
-    def write_to_csv(self, new_df, blockchain):
+    def write_to_csv(self, new_df, blkchn):
         """
         Write a DataFrame to a CSV file.
 
@@ -216,9 +218,9 @@ class DataAnalysis:
             new_df (DataFrame): The DataFrame to write.
             blockchain (str): The name of the blockchain.
         """
-        new_df.to_csv(f"data/{blockchain}_balance.csv")
+        new_df.to_csv(f"data/{blkchn}_balance.csv")
 
-    def process_monthly_prices(self, blockchain):
+    def process_monthly_prices(self, blkchn):
         """
         Process the monthly prices of a specific blockchain.
 

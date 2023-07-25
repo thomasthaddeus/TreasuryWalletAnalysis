@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Module to process and analyze token data from various blockchains.
 
@@ -10,14 +12,15 @@ an instance of the class and calling its run method.
 """
 
 import os
+import logging
 import time
+import json
 import pandas as pd
 import numpy as np
 from selenium import webdriver
-#from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.keys import Keys
 from dotenv import load_dotenv
 from web3 import Web3
-import json
 
 
 INFURA_API_KEY = os.getenv("INFURA_API_KEY")
@@ -37,26 +40,14 @@ class TokenData:
 
         This initializes a webdriver and loads the chain data from a CSV file.
         """
-        self.load_dotenv()
         self.options = webdriver.ChromeOptions()
         self.options.add_argument("--start-maximized")
         self.options.add_argument("--log-level=3")
         self.driver = webdriver.Chrome()
         self.driver.set_window_size(1920, 1080)
-        self.data = pd.read_csv("chain_info.csv")
+        self.data = pd.read_csv("/data/summary_info/chain_info.csv")
 
-    def load_dotenv(self):
-        """
-        Load environment variables from a .env file using python-dotenv.
-
-        This method uses the load_dotenv function from python-dotenv to
-        load environment variables from a .env file. This allows sensitive
-        information such as API keys to be stored securely and not included
-        in the code or version control.
-        """
-        load_dotenv()
-
-    def get_token_info(self, contract_address, w3):
+    def get_token_info(self, contract_address, w3):  #pylint: disable=C0103
         """
         Get information about a token from its contract address.
 
@@ -69,7 +60,7 @@ class TokenData:
             value.
         """
         with open(
-            file='data/json/contract_abi.json',
+            file='/data/json/contract_abi.json',
             mode='r',
             encoding='utf-8'
         ) as file:
@@ -83,7 +74,9 @@ class TokenData:
             token_symbol = contract.functions.symbol().call()
             decimal_value = contract.functions.decimals().call()
             return token_name, token_symbol, decimal_value
-        except Exception as err:
+        except RuntimeError as err:
+            # Log the error and potentially stop program execution
+            logging.error('RuntimeError occurred: %(err)s')
             print("An error occurred:", str(err))
             print(contract_address)
             return None
@@ -99,7 +92,7 @@ class TokenData:
         for _, row in self.data.iterrows():
             blockchain, base_url = row["blockchain"], row["blockExplorerURL"]
             print(blockchain, base_url)
-            w3 = self.get_web3(blockchain)
+            w3 = self.get_web3(blockchain) #pylint: disable=invalid-name
             data = pd.read_csv(f"data/{blockchain}.csv")
             data.drop(data.columns[[0]], axis=1, inplace=True)
             contract_addresses = data["contract_address"].unique()
@@ -116,7 +109,7 @@ class TokenData:
             data = self.filter_data(data)
             data.to_csv(f"data/{blockchain}.csv")
 
-    def get_web3(self, blockchain):
+    def get_web3(self, blkchn):
         """
         Get a Web3 instance for a given blockchain.
 
@@ -126,25 +119,25 @@ class TokenData:
         Returns:
             Web3: A Web3 instance used to interact with the given blockchain.
         """
-        if blockchain == "optimistic-ethereum":
+        if blkchn == "optimistic-ethereum":
             return Web3(
                 Web3.HTTPProvider(
                     f"https://optimism-mainnet.infura.io/v3/{INFURA_API_KEY}"
                 )
             )
-        elif blockchain == "ethereum":
+        elif blkchn == "ethereum":
             return Web3(
                 Web3.HTTPProvider(
                     f"https://mainnet.infura.io/v3/{INFURA_API_KEY}")
             )
-        elif blockchain == "polygon-pos":
+        elif blkchn == "polygon-pos":
             return Web3(
                 Web3.HTTPProvider(
                     f"https://polygon-mainnet.infura.io/v3/{INFURA_API_KEY}"
                 )
             )
 
-    def get_token_details(self, blockchain, base_url, contract_address, w3):
+    def get_token_details(self, blkchn, base_url, contract_address, w3):  #pylint: disable=C0103
         """
         Get the details of a token.
 
@@ -160,14 +153,16 @@ class TokenData:
             value.
         """
         self.driver.get(base_url + contract_address)
-        time.sleep(15)
-        if blockchain in ["arbitrum-one", "avalanche", "binance-smart-chain", "fantom"]:
+        time.sleep(1)
+        if blkchn in ["arbitrum-one", "avalanche", "binance-smart-chain", "fantom"]:
             return self.get_details_from_site()
-        elif blockchain in ["optimistic-ethereum", "ethereum", "polygon-pos"]:
+        elif blkchn in ["optimistic-ethereum", "ethereum", "polygon-pos"]:
             try:
                 return self.get_token_info(contract_address, w3)
             except BaseException as err:
+                logging.error('RuntimeError occurred: %(err)s')
                 print("An error occurred:", str(err))
+                return None
 
     def get_details_from_site(self):
         """
@@ -179,15 +174,15 @@ class TokenData:
         """
         token_name = self.driver.find_element_by_xpath(
             '//*[@id="content"]/div[1]/div/div[1]/h1/div/span'
-        ).text
+        ).txt
 
         ticker = self.driver.find_element_by_xpath(
             '//*[@id="ContentPlaceHolder1_divSummary"]/div[1]/div[1]/div/div[2]/div[2]/div[2]/b'
-        ).text
+        ).txt
 
         decimal = self.driver.find_element_by_xpath(
             '//*[@id="ContentPlaceHolder1_trDecimals"]/div/div[2]'
-        ).text
+        ).txt
 
         return token_name, ticker, decimal
 
