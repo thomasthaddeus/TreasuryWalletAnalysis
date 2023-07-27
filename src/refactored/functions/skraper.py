@@ -19,7 +19,6 @@ import pandas as pd
 import numpy as np
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from dotenv import load_dotenv
 from web3 import Web3
 
 
@@ -46,6 +45,7 @@ class TokenData:
         self.driver = webdriver.Chrome()
         self.driver.set_window_size(1920, 1080)
         self.data = pd.read_csv("/data/summary_info/chain_info.csv")
+        self.w3 = Web3()
 
     def get_token_info(self, contract_address, w3):  #pylint: disable=C0103
         """
@@ -125,12 +125,12 @@ class TokenData:
                     f"https://optimism-mainnet.infura.io/v3/{INFURA_API_KEY}"
                 )
             )
-        elif blkchn == "ethereum":
+        if blkchn == "ethereum":
             return Web3(
                 Web3.HTTPProvider(
                     f"https://mainnet.infura.io/v3/{INFURA_API_KEY}")
             )
-        elif blkchn == "polygon-pos":
+        if blkchn == "polygon-pos":
             return Web3(
                 Web3.HTTPProvider(
                     f"https://polygon-mainnet.infura.io/v3/{INFURA_API_KEY}"
