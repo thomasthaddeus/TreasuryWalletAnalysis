@@ -17,10 +17,12 @@ import time
 import json
 import pandas as pd
 import numpy as np
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
+import requests
+from bs4 import BeautifulSoup
 from web3 import Web3
 
+logging.basicConfig(filename='app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger('ScraperLogger')
 
 INFURA_API_KEY = os.getenv("INFURA_API_KEY")
 
@@ -74,12 +76,9 @@ class TokenData:
             token_symbol = contract.functions.symbol().call()
             decimal_value = contract.functions.decimals().call()
             return token_name, token_symbol, decimal_value
-        except RuntimeError as err:
-            # Log the error and potentially stop program execution
-            logging.error('RuntimeError occurred: %(err)s')
-            print("An error occurred:", str(err))
-            print(contract_address)
-            return None
+        except Exception as err:
+            logger.error(f"Failed to get info for contract {contract_address}. Error: {err}")
+            return None, None, None
 
     def process_data(self):
         """
@@ -102,12 +101,54 @@ class TokenData:
                     token_name, ticker, decimal = self.get_token_details(
                         blockchain, base_url, contract_address, w3
                     )
-                    data = self.update_data(
-                        data, contract_address, token_name, ticker, decimal
-                    )
+                    if token_name is not None:
+                        data = self.update_data(
+                            data, contract_address, token_name, ticker, decimal
+                        )
             data = self.calculate_values(data)
             data = self.filter_data(data)
             data.to_csv(f"data/{blockchain}.csv")
+
+    def get_token_details(self, contract_address):
+        try:
+            response = requests.get(self.base_url + contract_address)
+            soup = BeautifulSoup(response.text, 'html.parser')
+
+            token_name = soup.find(id='token-name').text
+            ticker = soup.find(id='ticker').text
+            decimal = soup.find(id='decimal').text
+
+            return token_name, ticker, decimal
+        except Exception as e:
+            logger.error(f"Failed to get details for contract {contract_address}. Error: {e}")
+            return None, None, None
+
+    def get_token_info(self):
+        for contract in self.contracts:
+            try:
+                token_name, ticker, decimal = self.get_token_details(contract)
+                if token_name is not None:
+                    print(f"{token_name} ({ticker}): {decimal} decimals")
+            except Exception as e:
+                logger.error(f"Failed to get info for contract {contract}. Error: {e}")
+
+    def get_token_balance(self, contract_address, wallet_address):
+        try:
+            contract = self.w3.eth.contract(address=contract_address, abi=self.abi)
+            balance = contract.functions.balanceOf(wallet_address).call()
+            return balance
+        except Exception as e:
+            logger.error(f"Failed to get balance for contract {contract_address} and wallet {wallet_address}. Error: {err}")
+            return None
+
+    def get_token_balances(self, wallet_address):
+        for contract in self.contracts:
+            try:
+                balance = self.get_token_balance(contract, wallet_address)
+                if balance is not None:
+                    print(f"Balance for contract {contract} and wallet {wallet_address}: {balance}")
+            except Exception as e:
+                logger.error(f"Failed to get balance for contract {contract} and wallet {wallet_address}. Error: {e}")
 
     def get_web3(self, blkchn):
         """
@@ -163,6 +204,8 @@ class TokenData:
                 logging.error('RuntimeError occurred: %(err)s')
                 print("An error occurred:", str(err))
                 return None
+
+
 
     def get_details_from_site(self):
         """
