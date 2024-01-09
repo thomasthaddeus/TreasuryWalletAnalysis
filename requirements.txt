@@ -18,7 +18,7 @@ eth-rlp==0.3.0
 eth-typing==3.4.0
 eth-utils==2.2.0
 exceptiongroup==1.1.2
-fonttools==4.41.1
+fonttools==4.43.0
 frozenlist==1.4.0
 h11==0.14.0
 hexbytes==0.3.1
